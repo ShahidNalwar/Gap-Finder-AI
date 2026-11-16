@@ -3,6 +3,7 @@ import "server-only";
 import { z } from "zod";
 import { AppError, checkDb, type DbClient } from "@/lib/api";
 import { storedQuestionSchema, topicSchema } from "@/lib/ai/schemas";
+import { scoreTopic } from "@/lib/scoring/mastery";
 
 const answerSchema = z.object({
   question_id: z.string().uuid(), selected_index: z.number().int(), confidence: z.enum(["sure", "guessing"]),
@@ -43,7 +44,13 @@ export async function buildReport(supabase: DbClient, userId: string, attemptId:
       section: sections.find((chunk) => chunk.id === question.chunk_id)?.section ?? "Uploaded source",
     };
   });
-  return { attemptId, createdAt: String(attempt.data.created_at), submittedAt: String(attempt.data.submitted_at), topics, reviews };
+  const scores = topics.filter((topic) => !topic.parent_id).map((topic) => scoreTopic(topic,
+    reviews.filter((review) => review.topic_id === topic.id).map((review) => ({
+      correct: review.isCorrect, confidence: review.confidence,
+      misconception: review.isCorrect ? null : review.misconceptions[review.selectedIndex] ?? null,
+    })),
+  ));
+  return { attemptId, createdAt: String(attempt.data.created_at), submittedAt: String(attempt.data.submitted_at), topics, reviews, scores };
 }
 
 export type Report = Awaited<ReturnType<typeof buildReport>>;

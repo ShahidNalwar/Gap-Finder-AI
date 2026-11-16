@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { buildReport } from "@/lib/reports/build";
 import { AppError } from "@/lib/api";
 import { AnswerReview } from "@/components/answer-review";
+import { GapReport } from "@/components/gap-report";
 
 export default async function ReportPage({ params }: { params: Promise<{ attemptId: string }> }) {
   const user = await requireUser();
@@ -19,6 +20,11 @@ export default async function ReportPage({ params }: { params: Promise<{ attempt
     <p className="mb-3 text-xs font-bold uppercase tracking-[.18em] text-teal-800">Your diagnostic results</p>
     <h1 className="text-3xl font-bold">See what your answers reveal.</h1>
     <p className="mt-4 text-slate-500">{report.reviews.filter((question) => question.isCorrect).length} of {report.reviews.length} correct. Confidence-aware diagnosis uses more than accuracy alone.</p>
+    <GapReport scores={report.scores} />
+    <div className="mt-8 flex flex-wrap gap-4">
+      <Link className="button-primary" href={`/plan?attempt=${report.attemptId}`}>Build my revision plan →</Link>
+      <Link className="button-secondary" href="/quiz">Retake diagnostic</Link>
+    </div>
     <AnswerReview reviews={report.reviews} />
   </section>;
 }
