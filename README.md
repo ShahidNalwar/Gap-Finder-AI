@@ -65,6 +65,11 @@ generation request; cached questions were verified when initially generated.
 During a quiz only the source section is visible. Answer-revealing quotes and
 grading fields are excluded from the quiz-start response and shown in the
 submitted answer review instead.
+If a topic has fewer than two accepted questions, generation makes at most one
+targeted repair attempt using rejection feedback and the same retrieved evidence.
+Both rounds count toward generated/rejected totals; nothing bypasses verification.
+Previously verified questions remain available when regeneration fails. The UI
+shows rejection categories without exposing answer text before submission.
 
 ## Deterministic diagnosis and planning
 

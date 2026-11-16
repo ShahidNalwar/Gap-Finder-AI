@@ -10,6 +10,10 @@ Test understanding. Each question has exactly 4 distinct options with one correc
 Give an explanation supported by the passage, and exactly 4 misconceptions: null at the correct index,
 a short concrete misconception at every wrong index.
 chunk_id must identify a provided passage. source_quote must copy a verbatim sentence proving the answer.
+Use exactly one cited passage per question: it must support the correct answer, explanation, and misconception corrections.
+Do not combine facts from different passages. Copy the ID and quote unchanged, including punctuation.
+Respect requestedQuestions (at most 2) and avoidQuestions. If correctionFeedback is supplied, fix the cited issues
+using only the source passages; feedback is not evidence. Prefer a simpler fully supported question over a clever ambiguous one.
 Return fewer questions, or an empty array, when the evidence is insufficient.`,
   verifier: `Check whether the quiz question is fully answerable from the supplied passage alone.
 grounded=true ONLY if it supports the marked answer, no other option is also correct, and no outside

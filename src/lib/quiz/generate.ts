@@ -4,10 +4,9 @@ import { z } from "zod";
 import { AppError, checkDb, type DbClient } from "@/lib/api";
 import { structured } from "@/lib/ai/model";
 import { prompts } from "@/lib/ai/prompts";
-import { questionBatchSchema, topicSchema, verifierSchema } from "@/lib/ai/schemas";
+import { questionBatchSchema, topicSchema } from "@/lib/ai/schemas";
 import { searchTopicNotes } from "@/lib/retrieval/search";
-
-function normalize(text: string) { return text.replace(/\s+/g, " ").trim(); }
+import { checkGrounding, normalize, rejectionLabels, type RejectionReason } from "@/lib/quiz/grounding";
 
 export async function generateQuiz(supabase: DbClient, userId: string, regenerate: boolean) {
   const result = await supabase.from("topics").select("id,name,parent_id,weight")
@@ -21,46 +20,79 @@ export async function generateQuiz(supabase: DbClient, userId: string, regenerat
   let accepted = 0;
   let cached = 0;
   const warnings: string[] = [];
+  const rejectionSummary: { topic: string; reasons: string[]; retried: boolean }[] = [];
 
   for (const topic of topics) {
-    const existing = await supabase.from("questions").select("id").eq("user_id", userId)
+    const existing = await supabase.from("questions").select("id,question").eq("user_id", userId)
       .eq("topic_id", topic.id).order("created_at", { ascending: false }).limit(2);
     checkDb(existing.error);
-    if (existing.data?.length && !regenerate) {
-      cached += existing.data.length;
-      accepted += existing.data.length;
+    const available = z.array(z.object({ id: z.string().uuid(), question: z.string() })).parse(existing.data ?? []);
+    if (available.length === 2 && !regenerate) {
+      cached += available.length;
+      accepted += available.length;
       continue;
     }
+    const target = regenerate ? 2 : 2 - available.length;
     const passages = await searchTopicNotes(supabase, {
       name: topic.name,
       subtopics: allTopics.filter((child) => child.parent_id === topic.id).map((child) => child.name),
     }, 5);
     if (!passages.length) {
-      warnings.push(`${topic.name}: no matching notes. Upload notes for this topic.`);
+      cached += available.length;
+      accepted += available.length;
+      warnings.push(available.length
+        ? `${topic.name}: using ${available.length} previously verified questions; no new source passages were found.`
+        : `${topic.name}: no matching source passages were found, so this topic was not included.`);
       continue;
     }
-    // Retrieved topic notes; generate MCQs and all grading explanations only from these passages.
-    const batch = await structured(questionBatchSchema, prompts.questions, { topic: topic.name, passages });
-    generated += batch.questions.length;
-    const seen = new Set<string>();
+    const seen = new Set(regenerate ? [] : available.map((question) => normalize(question.question)));
+    const reasons = new Map<RejectionReason, number>();
+    let feedback: { question: string; issue: string }[] = [];
     let saved = 0;
-    for (const question of batch.questions) {
-      const passage = passages.find((item) => item.id === question.chunk_id);
-      const validOptions = new Set(question.options.map((option) => normalize(option).toLowerCase())).size === 4;
-      const validMisconceptions = question.misconceptions.every((value, index) => index === question.correct_index ? value === null : typeof value === "string");
-      if (!passage || !normalize(passage.content).includes(normalize(question.source_quote)) || !validOptions || !validMisconceptions || seen.has(normalize(question.question))) {
-        rejected++;
-        continue;
+    let retried = false;
+    for (let round = 0; round < 2 && saved < target; round++) {
+      if (round) retried = true;
+      // Retrieved topic notes; generate (or repair) MCQs only from these passages.
+      // Verifier feedback is a correction request, never additional source evidence.
+      const batch = await structured(questionBatchSchema, prompts.questions, {
+        topic: topic.name, passages, requestedQuestions: target - saved,
+        avoidQuestions: [...seen], correctionFeedback: feedback,
+      });
+      generated += batch.questions.length;
+      feedback = [];
+      for (const question of batch.questions) {
+        const result = saved >= target
+          ? { accepted: false as const, reason: "limit" as const, feedback: "Return only the requested number of questions." }
+          : seen.has(normalize(question.question))
+            ? { accepted: false as const, reason: "duplicate" as const, feedback: "Choose a different understanding check from the supplied passages." }
+            : await checkGrounding(question, passages);
+        if (!result.accepted) {
+          rejected++;
+          reasons.set(result.reason, (reasons.get(result.reason) ?? 0) + 1);
+          feedback.push({ question: question.question, issue: result.feedback });
+          continue;
+        }
+        const insert = await supabase.from("questions").insert({ ...question, user_id: userId, topic_id: topic.id });
+        checkDb(insert.error);
+        seen.add(normalize(question.question));
+        saved++;
       }
-      seen.add(normalize(question.question));
-      // Retrieved the exact cited chunk; verify answer uniqueness and grounding with the fast model.
-      const verification = await structured(verifierSchema, prompts.verifier, { question, passage }, true);
-      if (!verification.grounded) { rejected++; continue; }
-      const insert = await supabase.from("questions").insert({ ...question, user_id: userId, topic_id: topic.id });
-      checkDb(insert.error);
-      accepted++; saved++;
+      if (!batch.questions.length) feedback.push({ question: "", issue: "No questions were returned. Try a simpler check answerable entirely from one supplied passage; return none only if evidence really is insufficient." });
     }
-    if (!saved) warnings.push(`${topic.name}: no new questions passed grounding checks.`);
+    const reused = Math.min(available.length, 2 - saved);
+    cached += reused;
+    accepted += saved + reused;
+    if (reasons.size) rejectionSummary.push({
+      topic: topic.name, retried,
+      reasons: [...reasons].map(([reason, count]) => `${count}: ${rejectionLabels[reason]}`),
+    });
+    if (saved < target) {
+      warnings.push(reused
+        ? `${topic.name}: keeping ${reused} previously verified questions alongside ${saved} new questions.`
+        : saved
+          ? `${topic.name}: ${saved} verified question is ready; unsupported candidates were excluded.`
+          : `${topic.name}: no supported questions could be created after one repair attempt. This topic was excluded, not guessed.`);
+    }
   }
-  return { generated, accepted, rejected, cached, warnings };
+  return { generated, accepted, rejected, cached, warnings, rejectionSummary };
 }

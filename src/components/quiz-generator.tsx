@@ -6,6 +6,7 @@ import { requestJson } from "@/lib/http";
 
 const countsSchema = z.object({
   generated: z.number(), accepted: z.number(), rejected: z.number(), cached: z.number(), warnings: z.array(z.string()),
+  rejectionSummary: z.array(z.object({ topic: z.string(), reasons: z.array(z.string()), retried: z.boolean() })).default([]),
 });
 
 export function QuizGenerator({ onReady }: { onReady?: () => void }) {
@@ -38,6 +39,13 @@ export function QuizGenerator({ onReady }: { onReady?: () => void }) {
         <p className="font-semibold text-teal-800">Generated {counts.generated}, rejected {counts.rejected} · {counts.accepted} ready ({counts.cached} cached)</p>
         {counts.cached > 0 && <p className="text-slate-500">Counts describe this request; cached questions were verified when first generated.</p>}
         {counts.warnings.map((warning) => <p key={warning} className="text-amber-800">{warning}</p>)}
+        {counts.rejectionSummary.length > 0 && <details className="rounded-lg bg-slate-50 p-3 text-slate-600">
+          <summary className="cursor-pointer font-semibold">Why some candidates were rejected</summary>
+          {counts.rejectionSummary.map((item) => <div key={item.topic} className="mt-3">
+            <p className="font-semibold">{item.topic}{item.retried ? " · one repair attempt" : ""}</p>
+            <ul className="mt-1 list-inside list-disc">{item.reasons.map((reason) => <li key={reason}>{reason}</li>)}</ul>
+          </div>)}
+        </details>}
       </div>}
     </section>
   );
