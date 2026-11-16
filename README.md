@@ -18,7 +18,7 @@ The diagnosis—not a chatbot—is the main output.
 | `/report/[attemptId]` | Weak/medium/strong diagnosis, blind spots, per-answer explanations and citations |
 | `/plan` | Time-budgeted revision, grounded tips, priority/mastery changes after retakes |
 | `/dashboard` | Topic mastery across the latest 20 submitted attempts and latest plan |
-| `/chat` | Grounded helper (implemented last; see current status below) |
+| `/chat` | Explain-this-topic helper using only own material, with citations and exact refusal |
 
 Stack: Next.js App Router, strict TypeScript, Tailwind CSS, Supabase Auth/Postgres/RLS
 using `@supabase/ssr`, Vercel AI SDK with Groq, zod, pdf-parse, and Vitest.
@@ -37,10 +37,11 @@ Retake → recomputed mastery/priority → updated plan + dashboard
 | Step | Retrieval | Generation |
 |---|---|---|
 | Topic map | Own syllabus chunks | Up to six topic trees; names checked against syllabus |
-| Past-paper mapping | Syllabus passages matching each exam question | Chooses an extracted candidate name or `none` |
+| Past-paper mapping | Matching notes bridge question vocabulary to candidate syllabus passages | Chooses an evidence-backed extracted candidate name or `none` |
 | Quiz | Notes for topic + subtopics | Up to two MCQs with four options, grading text, chunk ID, quote |
 | Verification | Exact cited chunk | Fast model checks answer uniqueness, explanation, grounding |
 | Tips | Notes for the topic | Exactly two tips; never order, minutes, or priority |
+| Chat | Top four syllabus/notes passages for the question | Validated explanation + cited chunk IDs, or exact refusal |
 
 Retrieval lives in `src/lib/retrieval/search.ts`; generation receives the returned
 passages, never unrestricted material or external tools. Queries join keywords
@@ -147,20 +148,27 @@ current session only.
 
 ## Evaluation and verification status
 
-- **26 unit tests pass:** chunking, scoring, and planning only.
+- **27 unit tests pass:** chunking, scoring, and planning only.
 - Production build and strict TypeScript checks pass.
 - All workspace pages redirect signed-out visitors to login; tested APIs return 401.
 - Invalid-login errors were checked in-browser; successful login was reported by the user.
 - Live Groq syllabus smoke check returned the expected four sample topics.
-- Live Groq quiz smoke check: **1 generated, 1 accepted, 0 rejected** with a valid
-  quote and independent grounding check. This small run is not a general accuracy benchmark.
+- Two live Groq quiz smoke checks: **3 generated, 3 accepted, 0 rejected** in total,
+  with valid quotes and independent grounding checks. These small runs are not a general accuracy benchmark.
 - Actual pdf-parse extraction was verified with a text-based PDF buffer.
 - Sample past-paper parsing found all ten questions.
 - Expected sample exam counts: Photosynthesis 3, Respiration 3, Human Digestion 2,
   Transportation 2. Two questions per topic gives an eight-question sample quiz.
 - Full authenticated upload → retake flow still needs checking after the migration
   is applied. No test student data was inserted by the coding agent.
-- Chat refusal and deployment status are updated after the final helper slice.
+- Chat streams progress and the final validated answer, not unvalidated model tokens.
+  Empty retrieval returns exactly `I couldn't find this in your uploaded material.`
+  without an LLM call; irrelevant retrieved passages must also trigger refusal.
+- Isolated chat smoke checks passed: empty-retrieval stub made **zero model calls**;
+  live in-scope generation cited the supplied passage; an unrelated question was
+  refused even when a science passage was supplied. These checks did not insert
+  database rows or exercise a signed-in HTTP session.
+- Deployment remains pending the external setup in DEPLOYMENT.md.
 
 ## Two-minute demo
 
@@ -170,6 +178,7 @@ current session only.
 4. Open the gap report; show reasons, blind spots, source quotes, and explanations.
 5. Build a plan with five days and two hours/day.
 6. Retake with improved answers; compare the updated plan and Dashboard.
+7. Ask Chat for an in-scope explanation, then ask an unrelated question to show refusal.
 
 ## Limitations
 
