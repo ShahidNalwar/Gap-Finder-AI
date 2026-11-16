@@ -20,7 +20,9 @@ export async function generatePlan(supabase: DbClient, userId: string, attemptId
   catch (error) { throw new AppError(error instanceof Error ? error.message : "Invalid time budget."); }
   const warnings: string[] = [];
   for (const item of plan.items) {
-    const passages = await searchChunks(supabase, item.name, 3, ["notes"]);
+    // Topic labels may occur only in headings; include subtopics just as quiz retrieval does.
+    const query = [item.name, ...report.topics.filter((topic) => topic.parent_id === item.topicId).map((topic) => topic.name)].join(" ");
+    const passages = await searchChunks(supabase, query, 3, ["notes"]);
     if (!passages.length) { warnings.push(`${item.name}: upload matching notes to get source-based tips.`); continue; }
     const facts = report.scores.find((score) => score.id === item.topicId)!;
     try {
