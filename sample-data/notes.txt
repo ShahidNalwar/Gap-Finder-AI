@@ -1,0 +1,37 @@
+Chapter 1: Photosynthesis
+
+Section 1.1 Raw materials and products
+Photosynthesis is the process by which green plants make food using sunlight. The raw materials are carbon dioxide and water. Carbon dioxide enters through the stomata in the leaves, and water is absorbed by the roots and carried to the leaves. The products are glucose and oxygen. The overall reaction can be written as six molecules of carbon dioxide plus six molecules of water, in the presence of light and chlorophyll, giving one molecule of glucose and six molecules of oxygen.
+
+Section 1.2 Light reaction and dark reaction
+Photosynthesis takes place in the chloroplasts, which contain the green pigment chlorophyll. The light reaction occurs in the thylakoid membranes. In this stage light energy splits water molecules and oxygen is released. The light energy is stored as ATP and NADPH. The dark reaction, also called the Calvin cycle, occurs in the stroma of the chloroplast. It does not use light directly, but it uses the ATP and NADPH from the light reaction to convert carbon dioxide into glucose.
+
+Section 1.3 Stomata and gas exchange in plants
+Stomata are tiny pores on the surface of leaves, and each pore is surrounded by two guard cells. When guard cells take in water they swell and the stomata open, allowing carbon dioxide to enter and oxygen to leave. When guard cells lose water the stomata close. Plants also lose water vapour through open stomata, and this loss is called transpiration. Stomata usually close at night or in very dry conditions to save water.
+
+Chapter 2: Respiration
+
+Section 2.1 Aerobic respiration
+Respiration is the process of releasing energy from food. In aerobic respiration, glucose is broken down in the presence of oxygen to give carbon dioxide, water and energy. The first step, glycolysis, takes place in the cytoplasm and breaks glucose into pyruvate. The remaining steps take place in the mitochondria, which is why mitochondria are called the powerhouse of the cell. Aerobic respiration releases much more energy than anaerobic respiration. The energy is stored in a molecule called ATP.
+
+Section 2.2 Anaerobic respiration
+Anaerobic respiration takes place without oxygen. In yeast, glucose is broken down into ethanol and carbon dioxide, a process called fermentation that is used in making bread and alcohol. In human muscle cells, when oxygen is in short supply during heavy exercise, pyruvate is converted into lactic acid. The build-up of lactic acid in the muscles causes cramps and tiredness. Anaerobic respiration releases much less energy than aerobic respiration.
+
+Section 2.3 Breathing in humans
+Breathing is the physical process that brings air into the lungs and sends it out, and it is different from cellular respiration. During inhalation the diaphragm contracts and moves downward and the rib muscles lift the ribs up and outward. This increases the volume of the chest cavity and air rushes into the lungs. During exhalation the diaphragm relaxes and moves upward, the ribs move down, and air is pushed out. Gas exchange takes place in the alveoli, which are tiny air sacs surrounded by capillaries.
+
+Chapter 3: Human Digestion
+
+Section 3.1 The alimentary canal
+The alimentary canal is a long tube running from the mouth to the anus. Food passes through the mouth, oesophagus, stomach, small intestine and large intestine. Muscular contractions called peristalsis push food along the oesophagus and the rest of the canal. The stomach holds food and mixes it with gastric juice. The small intestine is the longest part of the canal and is where most digestion and absorption of food takes place. The large intestine absorbs water and forms the waste into faeces.
+
+Section 3.2 Digestive enzymes and absorption
+Digestion begins in the mouth, where salivary amylase starts to break down starch into maltose. In the stomach, hydrochloric acid makes the contents acidic and the enzyme pepsin begins the digestion of proteins. Bile, made by the liver, is not an enzyme, but it breaks large fat globules into smaller droplets, which is called emulsification. Pancreatic lipase then digests fats. The inner wall of the small intestine has finger-like projections called villi that increase the surface area for absorption of digested food into the blood.
+
+Chapter 4: Transportation
+
+Section 4.1 The human heart
+The human heart is a muscular organ with four chambers: two upper atria and two lower ventricles. The right side of the heart receives deoxygenated blood from the body and pumps it to the lungs through the pulmonary artery. The left side receives oxygenated blood from the lungs and pumps it to the whole body through the aorta. Valves between the chambers make sure that blood flows in only one direction. The left ventricle has the thickest wall because it pumps blood to the entire body.
+
+Section 4.2 Blood vessels
+Arteries carry blood away from the heart. They have thick, elastic walls because blood in them is under high pressure. Veins carry blood back to the heart. They have thinner walls and contain valves that stop the backflow of blood. Capillaries are the smallest vessels, with walls that are only one cell thick, and the exchange of oxygen, nutrients and waste between blood and body cells takes place through them. An exception to the usual rule is the pulmonary artery, which carries deoxygenated blood.
