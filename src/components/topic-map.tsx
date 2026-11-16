@@ -36,7 +36,7 @@ export function TopicMap() {
         <button className="button-primary" onClick={build} disabled={busy || loading}>{busy ? "Reading syllabus and mapping papers…" : roots.length ? "Rebuild topic map" : "Build topic map"}</button>
         {!!roots.length && <Link href="/quiz" className="text-sm font-semibold text-teal-800 underline">Take a diagnostic quiz →</Link>}
       </div>
-      {busy && <p role="status" className="text-sm text-slate-500">This can take a few minutes. Mapping runs sequentially to respect AI rate limits.</p>}
+      {busy && <p role="status" className="text-sm text-slate-500">Reading your material. If Groq is busy, requests wait and retry automatically (up to three attempts). This can take a few minutes; please don&apos;t start another build.</p>}
       {error && <p role="alert" className="rounded-xl bg-red-50 p-4 text-red-800">{error}</p>}
       {message && <p role="status" className="rounded-xl bg-teal-50 p-4 text-teal-900">{message}</p>}
       {loading ? <p role="status">Loading topics…</p> : !roots.length ? <p className="text-slate-500">No topic map yet. <Link className="underline" href="/upload">Upload your syllabus</Link>, then build it here. Uploads never automatically replace an existing map.</p> : (

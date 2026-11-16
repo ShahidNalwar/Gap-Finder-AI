@@ -47,7 +47,10 @@ Retrieval lives in `src/lib/retrieval/search.ts`; generation receives the return
 passages, never unrestricted material or external tools. Queries join keywords
 with `or` so partial full-text matches work. Uploaded instructions are treated as
 untrusted source data. Every generated output is zod-validated; invalid output is
-retried once. Rate-limited calls get one short backoff and a friendly error.
+retried once. Calls share a paced queue within each server process. Rate-limited
+calls honor Groq's Retry-After (or token-reset) header with at most three total
+attempts. Long cooldowns and daily quotas produce actionable messages rather
+than repeatedly retrying; saved material is unchanged.
 
 Question acceptance requires a retrieved chunk ID, a whitespace-normalized exact
 source quote, distinct options, appropriate misconception entries, and an

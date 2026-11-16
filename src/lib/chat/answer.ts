@@ -12,7 +12,7 @@ export async function answerFromMaterial(supabase: DbClient, message: string): P
   if (!passages.length) return refusal;
 
   // Retrieved at most four own passages; generate only a source-grounded explanation, not a memory answer.
-  const result = await structured(chatOutputSchema, prompts.chat, { question: message, passages });
+  const result = await structured(chatOutputSchema, prompts.chat, { question: message, passages }, false, 1500);
   if (!result.supported || !result.used_chunk_ids.length) return refusal;
   if (result.used_chunk_ids.some((id) => !passages.some((passage) => passage.id === id))) return refusal;
   const citations = [...new Set(result.used_chunk_ids)].map((id) => {

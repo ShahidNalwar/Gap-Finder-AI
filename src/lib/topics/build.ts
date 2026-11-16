@@ -32,7 +32,7 @@ export async function buildTopics(supabase: DbClient, userId: string, rebuild: b
   if (passages.reduce((n, p) => n + p.content.length, 0) > 16_000) throw new AppError("This syllabus is too large for one topic map. Use a shorter syllabus covering up to six topics.");
 
   // Retrieved the user's syllabus chunks; generate only its topic hierarchy.
-  const tree = await structured(topicTreeSchema, prompts.topics, { passages });
+  const tree = await structured(topicTreeSchema, prompts.topics, { passages }, false, 1800);
   const normalize = (text: string) => text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
   const sourceText = normalize(passages.map((passage) => `${passage.section ?? ""} ${passage.content}`).join(" "));
   if (tree.topics.some((topic) => !sourceText.includes(normalize(topic.name)) || topic.subtopics.some((name) => !sourceText.includes(normalize(name))))) {

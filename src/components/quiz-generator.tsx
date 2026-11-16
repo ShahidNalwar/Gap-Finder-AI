@@ -32,7 +32,7 @@ export function QuizGenerator({ onReady }: { onReady?: () => void }) {
         <button className="button-primary" disabled={busy} onClick={() => generate(false)}>{busy ? "Retrieving, generating, verifying…" : "Prepare quiz"}</button>
         <button className="button-secondary" disabled={busy} onClick={() => generate(true)}>Regenerate questions</button>
       </div>
-      {busy && <p role="status" className="text-sm text-slate-500">This may take a few minutes. If Groq is busy, a short retry happens automatically. Questions that pass are saved.</p>}
+      {busy && <p role="status" className="text-sm text-slate-500">This may take a few minutes. If Groq is busy, requests wait and retry automatically (up to three attempts). Questions that pass are saved; please don&apos;t start another generation.</p>}
       {error && <p role="alert" className="text-sm text-red-800">{error}</p>}
       {counts && <div role="status" className="space-y-2 text-sm">
         <p className="font-semibold text-teal-800">Generated {counts.generated}, rejected {counts.rejected} · {counts.accepted} ready ({counts.cached} cached)</p>
