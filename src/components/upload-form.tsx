@@ -5,6 +5,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { z } from "zod";
 import { requestJson } from "@/lib/http";
 import { Icon } from "@/components/ui/icon";
+import { SAMPLE_PACK } from "@/lib/documents/sample-pack";
 
 const documentSchema = z.object({ id: z.string(), name: z.string(), kind: z.string(), created_at: z.string() });
 const documentsSchema = z.object({ documents: z.array(documentSchema) });
@@ -80,10 +81,10 @@ export function UploadForm() {
           <span className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl border border-teal-100 bg-white text-teal-800"><Icon name="book" className="h-6 w-6" /></span>
           <p className="eyebrow">Just exploring?</p>
           <h2 className="mt-3 text-2xl font-semibold leading-tight tracking-tight text-teal-950">Try it with a ready-made subject.</h2>
-          <p className="mt-4 text-sm leading-7 text-teal-900/65">Explore Class 10 Science with a complete Life Processes study pack. No files to hunt for.</p>
+          <p className="mt-4 text-sm leading-7 text-teal-900/65">Explore {SAMPLE_PACK.level} with a complete {SAMPLE_PACK.name} study pack. No files to hunt for.</p>
           <div className="my-6 flex flex-wrap gap-2">{["1 syllabus", "4 topics", "10 exam questions"].map((label) => <span key={label} className="rounded-lg border border-teal-100 bg-white/80 px-2.5 py-1.5 text-[11px] font-semibold text-teal-800">{label}</span>)}</div>
           <button className="button-secondary mt-auto self-start !border-teal-200 !text-teal-900" onClick={sample} disabled={!!busy}>{busy === "sample" ? "Loading sample…" : "Load sample data"}<Icon name="arrow" className="h-4 w-4" /></button>
-          <p className="mt-4 text-[11px] leading-5 text-teal-900/55">Already-loaded sample files won&apos;t be added again.</p>
+          <p className="mt-4 text-[11px] leading-5 text-teal-900/55">Use a fresh account to test this subject. Already-loaded files won&apos;t be added again; existing study data is never replaced.</p>
         </section>
       </div>
       <section className="surface p-6 sm:p-7">
@@ -103,7 +104,7 @@ export function UploadForm() {
       <details className="surface p-6">
         <summary className="cursor-pointer text-sm font-semibold text-slate-600">Look inside your sources <span className="ml-2 text-xs font-normal text-slate-400">Check source retrieval</span></summary>
         <form onSubmit={search} className="mt-5 flex flex-wrap gap-3">
-          <input name="query" aria-label="Search uploaded material" placeholder="Try chlorophyll" minLength={2} maxLength={200} required className="min-w-0 flex-1" />
+          <input name="query" aria-label="Search uploaded material" placeholder={`Try ${SAMPLE_PACK.searchExample}`} minLength={2} maxLength={200} required className="min-w-0 flex-1" />
           <button className="button-secondary" disabled={!!busy}>{busy === "search" ? "Searching…" : "Search"}</button>
         </form>
         {passages && (passages.length ? passages.map((passage) => <blockquote key={passage.id} className="mt-5 border-l-2 border-teal-600 pl-4 text-sm leading-6"><strong>{passage.section ?? "Source"} · {passage.kind}</strong><p>{passage.content}</p></blockquote>) : <p className="mt-4 text-slate-500">No matching passages found.</p>)}

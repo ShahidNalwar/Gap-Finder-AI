@@ -31,7 +31,8 @@
 
 - [ ] Signed-out `/upload` redirects to `/login`.
 - [ ] Demo login works; reloading keeps the session.
-- [ ] Load sample → build topics → verify four topics and counts 3/3/2/2.
+- [ ] In a fresh account, load the Electricity sample → build topics → verify
+  four topics and counts 2/3/3/2 (see `sample-data/README.md`).
 - [ ] Generate quiz → inspect generated/rejected counts and citations.
 - [ ] Submit mixed-confidence answers → verify labels, blind spots, misconceptions.
 - [ ] Build plan → ensure order and minutes fit five days × two hours/day.

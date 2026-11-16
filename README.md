@@ -174,11 +174,15 @@ current session only.
 - Production build and strict TypeScript checks pass.
 - All workspace pages redirect signed-out visitors to login; tested APIs return 401.
 - Invalid-login errors were checked in-browser; successful login was reported by the user.
-- Live Groq syllabus smoke check returned the expected four sample topics.
-- Two live Groq quiz smoke checks: **3 generated, 3 accepted, 0 rejected** in total,
+- Historical live Groq checks on the original Biology fixture returned its four topics.
+- Two historical live Groq quiz smoke checks on that fixture: **3 generated, 3 accepted, 0 rejected** in total,
   with valid quotes and independent grounding checks. These small runs are not a general accuracy benchmark.
 - Actual pdf-parse extraction was verified with a text-based PDF buffer.
 - Sample past-paper parsing found all ten questions.
+- The Electricity v2 fixture check preserved all four outline topics and ten
+  note sections, parsed all ten complete paper questions, and verified fresh
+  loading, duplicate avoidance, and protection of old material using a local
+  database stub. No remote student records or AI quota were used.
 - Isolated retrieval checks covered heading-only sources for Photosynthesis,
   Respiration, Human Digestion, Transportation, Algebra, and Cell Division,
   plus exact-citation fallback and genuinely missing material. Plan retrieval
@@ -190,8 +194,10 @@ current session only.
   focus, reduced-motion support, and responsive cards/navigation. Plan/report
   sample layouts were checked at 390px and 1440px without page overflow.
   Login's browser accessibility and best-practices audits scored 100 in the local check.
-- Expected sample exam counts: Photosynthesis 3, Respiration 3, Human Digestion 2,
-  Transportation 2. Two questions per topic gives an eight-question sample quiz.
+- Current sample exam counts: Electric Current 2, Potential Difference and
+  Resistance 3, Series and Parallel Circuits 3, Electrical Power and Energy 2.
+  Two questions per topic gives an eight-question sample quiz. Live AI mapping
+  and generation on this new fixture still need a signed-in end-to-end check.
 - Full authenticated upload → retake flow still needs checking after the migration
   is applied. No test student data was inserted by the coding agent.
 - Chat streams progress and the final validated answer, not unvalidated model tokens.
@@ -205,13 +211,25 @@ current session only.
 
 ## Two-minute demo
 
-1. Sign in and click **Load sample data** on Upload.
+1. Sign in with a fresh test account and click **Load sample data** on Upload.
 2. Build Topics; show the tree and paper-frequency bars.
 3. Prepare and start Quiz; deliberately mix sure/guessing and right/wrong answers.
 4. Open the gap report; show reasons, blind spots, source quotes, and explanations.
 5. Build a plan with five days and two hours/day.
 6. Retake with improved answers; compare the updated plan and Dashboard.
 7. Ask Chat for an in-scope explanation, then ask an unrelated question to show refusal.
+
+### New sample: Electricity and Circuits (v2)
+
+The bundled sample is now **Class 10 Physics**, not the original Biology pack.
+It covers current, voltage/resistance, series/parallel circuits, and power/energy.
+See [sample-data/README.md](sample-data/README.md) for expected topic weights,
+past-paper answers, retrieval queries, and chat checks.
+
+Use a **fresh test account**. The loader gives this version distinct document
+names and refuses to combine it with an account's existing material. Previously
+uploaded Biology documents, quiz questions, attempts, and plans remain untouched;
+changing these local fixture files does not replace saved student data.
 
 ## Keep an offline revision sheet
 

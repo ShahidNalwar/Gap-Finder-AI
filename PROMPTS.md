@@ -37,7 +37,7 @@ Build the upload flow.
 - lib/retrieval/search.ts: calls the search_chunks RPC. It builds the query by joining keywords with " or ". Returns passages with id, section, content.
 - Add a small debug page /debug/search where I type a query and see the retrieved chunks with their sections.
 Write unit tests for chunk.ts.
-Done when: uploading sample-data/notes.txt creates chunks, and searching "chlorophyll" returns the photosynthesis chunk with a correct section.
+Done when: uploading sample-data/notes.txt creates chunks, and searching "ammeter" returns the electric-current chunk with a correct section.
 ```
 
 ## Slice 3: topic map and past-paper mapping

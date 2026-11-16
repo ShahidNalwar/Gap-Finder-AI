@@ -1,16 +1,22 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { apiUser, apiError, checkDb, json, type DocumentKind } from "@/lib/api";
+import { apiUser, apiError, AppError, checkDb, json, type DocumentKind } from "@/lib/api";
 import { ingestDocument } from "@/lib/documents/ingest";
+import { SAMPLE_PACK } from "@/lib/documents/sample-pack";
 
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   try {
     const { supabase, userId } = await apiUser(request);
+    const existing = await supabase.from("documents").select("name").eq("user_id", userId);
+    checkDb(existing.error);
+    if (existing.data?.some((document) => !String(document.name).startsWith(`${SAMPLE_PACK.documentPrefix}: `))) {
+      throw new AppError("This account already has study material. Use a fresh test account for the new Electricity sample so subjects do not mix. Your existing documents and results have not been changed.", 409);
+    }
     let loaded = 0;
     for (const kind of ["syllabus", "notes", "past_paper"] as DocumentKind[]) {
-      const name = `Sample: ${kind}.txt`;
+      const name = `${SAMPLE_PACK.documentPrefix}: ${kind}.txt`;
       const { data, error } = await supabase.from("documents").select("id")
         .eq("user_id", userId).eq("name", name).eq("kind", kind).limit(1);
       checkDb(error);
