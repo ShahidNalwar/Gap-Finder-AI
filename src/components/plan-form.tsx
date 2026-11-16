@@ -6,6 +6,7 @@ import { z } from "zod";
 import { requestJson } from "@/lib/http";
 import { savedPlanSchema, type SavedPlan } from "@/lib/plans/schema";
 import { RevisionPlan } from "@/components/revision-plan";
+import { Icon } from "@/components/ui/icon";
 
 export function PlanForm({ attemptId }: { attemptId?: string }) {
   const [plan, setPlan] = useState<SavedPlan | null>(null);
@@ -41,12 +42,15 @@ export function PlanForm({ attemptId }: { attemptId?: string }) {
     finally { setBusy(false); }
   }
   return <div className="mt-8">
-    {error && <p role="alert" className="mb-5 rounded-xl bg-red-50 p-4 text-red-800">{error}</p>}
+    {error && <p role="alert" className="notice-error mb-5">{error}</p>}
     {loading ? <p role="status">Loading your plan…</p> : !target ? <p className="text-slate-500">Complete a <Link className="underline" href="/quiz">diagnostic quiz</Link> first so your plan reflects your actual gaps.</p> : (
-      <form className="flex flex-wrap items-end gap-5 rounded-2xl border border-slate-200 bg-white p-6" onSubmit={generate}>
-        <label className="text-sm font-semibold">Days available<input className="mt-2" type="number" min={1} max={60} step={1} required value={days} onChange={(event) => setDays(Number(event.target.value))} disabled={busy} /></label>
-        <label className="text-sm font-semibold">Hours per day<input className="mt-2" type="number" min={0.25} max={24} step={0.25} required value={hours} onChange={(event) => setHours(Number(event.target.value))} disabled={busy} /></label>
-        <button className="button-primary" disabled={busy}>{busy ? "Calculating schedule and retrieving tips…" : plan ? "Update revision plan" : "Build revision plan"}</button>
+      <form className="surface p-6 sm:p-7" onSubmit={generate}>
+        <div className="mb-6 flex items-center gap-3"><span className="icon-tile"><Icon name="clock" /></span><div><h2 className="text-base font-semibold text-slate-900">Make time for what matters.</h2><p className="mt-1 text-xs text-slate-400">Tell us what fits your day. We&apos;ll work within it.</p></div></div>
+        <div className="grid items-end gap-4 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_auto]">
+          <label className="text-xs font-semibold text-slate-600">Days available<input className="mt-2" type="number" min={1} max={60} step={1} required value={days} onChange={(event) => setDays(Number(event.target.value))} disabled={busy} /></label>
+          <label className="text-xs font-semibold text-slate-600">Hours per day<input className="mt-2" type="number" min={0.25} max={24} step={0.25} required value={hours} onChange={(event) => setHours(Number(event.target.value))} disabled={busy} /></label>
+          <button className="button-primary sm:col-span-2 lg:col-span-1" disabled={busy}>{busy ? "Calculating your plan…" : plan ? "Update revision plan" : "Build revision plan"}<Icon name="arrow" className="h-4 w-4" /></button>
+        </div>
       </form>
     )}
     {busy && <p role="status" className="mt-4 text-sm text-slate-500">Order and minutes are calculated in code. AI only adds source-based revision tips.</p>}

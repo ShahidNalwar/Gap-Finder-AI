@@ -186,6 +186,10 @@ current session only.
 - Revision-sheet checks verified owner-scoped plan loading, rejection of foreign
   and invalid plan IDs, daily checklist rendering, visible/escaped source quotes,
   and PDF layout using a synthetic sample. Export makes no AI calls or database writes.
+- UI uses shared page headers, accessible decorative icons, visible keyboard
+  focus, reduced-motion support, and responsive cards/navigation. Plan/report
+  sample layouts were checked at 390px and 1440px without page overflow.
+  Login's browser accessibility and best-practices audits scored 100 in the local check.
 - Expected sample exam counts: Photosynthesis 3, Respiration 3, Human Digestion 2,
   Transportation 2. Two questions per topic gives an eight-question sample quiz.
 - Full authenticated upload → retake flow still needs checking after the migration

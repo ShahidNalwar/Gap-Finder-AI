@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { z } from "zod";
 import { requestJson } from "@/lib/http";
+import { Icon } from "@/components/ui/icon";
 
 const countsSchema = z.object({
   generated: z.number(), accepted: z.number(), rejected: z.number(), cached: z.number(), warnings: z.array(z.string()),
@@ -26,11 +27,11 @@ export function QuizGenerator({ onReady }: { onReady?: () => void }) {
     finally { setBusy(false); }
   }
   return (
-    <section className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6">
-      <h2 className="text-xl font-bold">Prepare your diagnostic</h2>
+    <section className="surface space-y-5 p-6 sm:p-8">
+      <div className="flex items-center gap-3"><span className="icon-tile"><Icon name="shield" /></span><div><h2 className="text-lg font-semibold text-slate-900">A small quiz. A clearer picture.</h2><p className="mt-1 text-xs text-slate-400">Every question has to pass its source check.</p></div></div>
       <p className="text-sm leading-6 text-slate-500">Up to 6 topics and 12 questions. Questions are generated once, checked against their sources, and reused to save AI quota.</p>
       <div className="flex flex-wrap gap-3">
-        <button className="button-primary" disabled={busy} onClick={() => generate(false)}>{busy ? "Retrieving, generating, verifying…" : "Prepare quiz"}</button>
+        <button className="button-primary" disabled={busy} onClick={() => generate(false)}><Icon name="spark" className="h-4 w-4" />{busy ? "Retrieving, generating, verifying…" : "Prepare quiz"}</button>
         <button className="button-secondary" disabled={busy} onClick={() => generate(true)}>Regenerate questions</button>
       </div>
       {busy && <p role="status" className="text-sm text-slate-500">This may take a few minutes. If Groq is busy, requests wait and retry automatically (up to three attempts). Questions that pass are saved; please don&apos;t start another generation.</p>}

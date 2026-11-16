@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 import { topicSchema } from "@/lib/ai/schemas";
 import { requestJson } from "@/lib/http";
+import { Icon } from "@/components/ui/icon";
 
 const schema = z.object({ topics: z.array(topicSchema), mappings: z.array(z.object({ topic_id: z.string().nullable() })) });
 
@@ -37,16 +38,17 @@ export function TopicMap() {
         {!!roots.length && <Link href="/quiz" className="text-sm font-semibold text-teal-800 underline">Take a diagnostic quiz →</Link>}
       </div>
       {busy && <p role="status" className="text-sm text-slate-500">Reading your material. If Groq is busy, requests wait and retry automatically (up to three attempts). This can take a few minutes; please don&apos;t start another build.</p>}
-      {error && <p role="alert" className="rounded-xl bg-red-50 p-4 text-red-800">{error}</p>}
-      {message && <p role="status" className="rounded-xl bg-teal-50 p-4 text-teal-900">{message}</p>}
+      {error && <p role="alert" className="notice-error">{error}</p>}
+      {message && <p role="status" className="notice-success">{message}</p>}
       {loading ? <p role="status">Loading topics…</p> : !roots.length ? <p className="text-slate-500">No topic map yet. <Link className="underline" href="/upload">Upload your syllabus</Link>, then build it here. Uploads never automatically replace an existing map.</p> : (
-        <div className="grid gap-5 sm:grid-cols-2">{roots.map((topic) => {
+        <div className="grid gap-5 sm:grid-cols-2">{roots.map((topic, index) => {
           const count = data.mappings.filter((mapping) => mapping.topic_id === topic.id).length;
-          return <article key={topic.id} className="rounded-2xl border border-slate-200 bg-white p-6">
-            <h2 className="text-xl font-bold">{topic.name}</h2>
-            <ul className="my-4 list-inside list-disc space-y-2 text-sm text-slate-600">{data.topics.filter((child) => child.parent_id === topic.id).map((child) => <li key={child.id}>{child.name}</li>)}</ul>
-            <p className="text-sm text-teal-800">{count} past-paper questions · exam weight {topic.weight}</p>
-            <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-100" aria-hidden="true"><div className="h-full rounded-full bg-teal-600" style={{ width: `${count / max * 100}%` }} /></div>
+          return <article key={topic.id} className="surface surface-hover flex flex-col p-6 sm:p-7">
+            <div className="flex items-start justify-between gap-4"><span className="icon-tile text-sm font-semibold">{String(index + 1).padStart(2, "0")}</span><span className="rounded-full bg-slate-50 px-3 py-1.5 text-[11px] font-medium text-slate-400">Weight {topic.weight}</span></div>
+            <h2 className="mt-5 text-xl font-semibold tracking-tight text-slate-900">{topic.name}</h2>
+            <ul className="my-5 space-y-2.5 text-sm text-slate-500">{data.topics.filter((child) => child.parent_id === topic.id).map((child) => <li key={child.id} className="flex items-start gap-2"><span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-teal-400" />{child.name}</li>)}</ul>
+            <div className="mt-auto border-t border-slate-100 pt-5"><p className="flex items-center justify-between text-xs text-slate-400"><span className="inline-flex items-center gap-1.5"><Icon name="file" className="h-3.5 w-3.5" />Exam frequency</span><span className="font-semibold text-teal-800">{count} questions</span></p>
+            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-100" aria-hidden="true"><div className="h-full rounded-full bg-teal-600 transition-all" style={{ width: `${count / max * 100}%` }} /></div></div>
           </article>;
         })}</div>
       )}

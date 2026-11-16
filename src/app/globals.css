@@ -2,9 +2,10 @@
 
 :root {
   color-scheme: light;
-  background: #f7f8fa;
-  color: #172b3a;
-  font-family: Arial, Helvetica, sans-serif;
+  background: #f5f8f8;
+  color: #183135;
+  font-family: "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 .revision-check {
@@ -42,18 +43,46 @@
 }
 
 body { margin: 0; }
-button, input { font: inherit; }
+button, input, select, textarea { font: inherit; }
 button, a, input { -webkit-tap-highlight-color: transparent; }
 button:not(:disabled), a { cursor: pointer; }
 :focus-visible { outline: 3px solid #14b8a6; outline-offset: 4px; }
-button:disabled { cursor: wait; opacity: .6; }
-input { width: 100%; border: 1px solid #cbd5e1; border-radius: .65rem; padding: .8rem 1rem; background: white; }
+button:disabled { cursor: not-allowed; opacity: .55; }
+input { width: 100%; border: 1px solid #dbe4e7; border-radius: .75rem; padding: .85rem 1rem; background: white; transition: border-color .2s, box-shadow .2s; }
+input:hover:not(:disabled), select:hover:not(:disabled) { border-color: #9fb8bb; }
+input:focus, select:focus { border-color: #0d9488; box-shadow: 0 0 0 3px #0d948812; }
+input::placeholder { color: #94a3b8; }
+input[type="radio"], input[type="checkbox"] { accent-color: #0f766e; }
+input[type="file"]::file-selector-button { margin-right: 1rem; border: 0; border-radius: .5rem; background: #e8f5f1; color: #115e59; padding: .6rem .8rem; font-weight: 600; cursor: pointer; }
+::selection { background: #c9eee4; color: #134e4a; }
+
+@media screen {
+  body { background: radial-gradient(ellipse at 100% 0%, #dcefe854, transparent 35rem), #f5f8f8; }
+  .workspace-main { animation: enter-workspace .35s ease-out; }
+  .surface { box-shadow: 0 3px 16px -8px #18313515, 0 1px 2px #18313504; }
+  .surface-hover:hover { border-color: #bcd5d1; box-shadow: 0 10px 30px -15px #115e5925; transform: translateY(-2px); }
+}
+@keyframes enter-workspace { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .surface-hover:hover { transform: none; }
+}
+.revision-sheet { font-family: Arial, Helvetica, sans-serif; }
 
 @layer components {
   .button-primary {
-    @apply inline-flex items-center justify-center rounded-xl bg-teal-800 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-teal-900;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-teal-800 bg-teal-800 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:border-teal-900 hover:bg-teal-900 hover:shadow-md active:translate-y-px disabled:translate-y-0 disabled:shadow-none;
   }
   .button-secondary {
-    @apply inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:border-teal-200 hover:bg-teal-50 hover:text-teal-900 active:translate-y-px disabled:translate-y-0;
   }
+  .surface { @apply rounded-2xl border border-slate-200/80 bg-white; }
+  .surface-hover { @apply transition duration-200; }
+  .page-header { @apply border-b border-slate-200/80 pb-8; }
+  .page-title { @apply max-w-4xl text-3xl font-semibold leading-tight tracking-[-0.04em] text-slate-900 sm:text-[2.6rem]; }
+  .eyebrow { @apply inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.15em] text-teal-800; }
+  .icon-tile { @apply inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-teal-100 bg-teal-50 text-teal-800; }
+  .muted-label { @apply text-[11px] font-bold uppercase tracking-[0.12em] text-slate-500; }
+  .notice-error { @apply rounded-xl border border-red-100 bg-red-50 px-5 py-4 text-sm leading-6 text-red-800; }
+  .notice-success { @apply rounded-xl border border-teal-100 bg-teal-50 px-5 py-4 text-sm leading-6 text-teal-900; }
 }
