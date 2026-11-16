@@ -56,6 +56,9 @@ Question acceptance requires a retrieved chunk ID, a whitespace-normalized exact
 source quote, distinct options, appropriate misconception entries, and an
 independent fast-model grounding pass. Counts shown in the UI describe the current
 generation request; cached questions were verified when initially generated.
+During a quiz only the source section is visible. Answer-revealing quotes and
+grading fields are excluded from the quiz-start response and shown in the
+submitted answer review instead.
 
 ## Deterministic diagnosis and planning
 

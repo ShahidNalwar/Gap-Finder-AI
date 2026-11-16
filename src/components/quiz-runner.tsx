@@ -6,7 +6,6 @@ import { z } from "zod";
 import { publicQuestionSchema, type PublicQuestion } from "@/lib/ai/schemas";
 import { requestJson } from "@/lib/http";
 import { QuizGenerator } from "@/components/quiz-generator";
-import { Citation } from "@/components/citation";
 
 type Answer = { questionId: string; selectedIndex: number; confidence?: "sure" | "guessing" };
 const startSchema = z.object({ attemptId: z.string(), questions: z.array(publicQuestionSchema) });
@@ -73,7 +72,10 @@ export function QuizRunner() {
               className={answer?.confidence === confidence ? "button-primary" : "button-secondary"}
               onClick={() => choose(answer?.selectedIndex ?? -1, confidence)}>{confidence === "sure" ? "I'm sure" : "I'm guessing"}</button>)}</div>
         </fieldset>
-        <Citation section={question.section} quote={question.source_quote} />
+        <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm">
+          <p className="font-semibold text-teal-800">Source: {question.section}</p>
+          <p className="mt-2 text-slate-500">The source quote and explanation will be available after you submit the quiz.</p>
+        </div>
         <div className="mt-8 flex flex-wrap justify-between gap-3">
           <button className="button-secondary" disabled={busy || index === 0} onClick={() => setIndex(index - 1)}>Previous</button>
           {index < quiz.questions.length - 1

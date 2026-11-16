@@ -27,7 +27,7 @@ export const storedQuestionSchema = generatedQuestionSchema.extend({
 });
 export type StoredQuestion = z.infer<typeof storedQuestionSchema>;
 export const publicQuestionSchema = storedQuestionSchema.pick({
-  id: true, topic_id: true, question: true, options: true, chunk_id: true, source_quote: true,
+  id: true, topic_id: true, question: true, options: true, chunk_id: true,
 }).extend({ section: z.string(), topic: z.string() });
 export type PublicQuestion = z.infer<typeof publicQuestionSchema>;
 export const submissionSchema = z.object({
