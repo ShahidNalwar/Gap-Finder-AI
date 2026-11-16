@@ -5,7 +5,11 @@ Find what you don't know, then focus your revision where it matters.
 Upload → topic map → diagnostic quiz → **gap diagnosis** → revision plan → retest.
 The diagnosis—not a chatbot—is the main output.
 
-**Live deployment:** pending. **Demo credentials:** not created; use sign-up.
+**Live deployment:** [gapfinderai-olive.vercel.app](https://gapfinderai-olive.vercel.app/)
+
+**Chatbot:** [Open the grounded topic assistant](https://gapfinderai-olive.vercel.app/chat).
+Sign in or create an account on the [login page](https://gapfinderai-olive.vercel.app/login).
+No shared demo credentials are provided; use sign-up.
 
 ## Features
 
@@ -212,7 +216,9 @@ current session only.
   live in-scope generation cited the supplied passage; an unrelated question was
   refused even when a science passage was supplied. These checks did not insert
   database rows or exercise a signed-in HTTP session.
-- Deployment remains pending the external setup in DEPLOYMENT.md.
+- Deployed on Vercel at https://gapfinderai-olive.vercel.app/ (URL supplied by
+  the project owner). The deployed end-to-end flow has not been independently
+  verified by the coding agent; see DEPLOYMENT.md for the release checklist.
 
 ## Two-minute demo
 
@@ -287,6 +293,6 @@ ticked on the page or paper; page checkmarks are not persisted.
   sends correct indexes in the quiz-start response.
 - Topic rebuild is blocked after submission; versioned syllabuses and stronger
   cross-owner relational constraints are intentionally outside this MVP.
-- No live URL or demo password is claimed until deployment has been verified.
+- No shared demo account is provided; visitors must sign up or use their existing account.
 
 See [DEPLOYMENT.md](DEPLOYMENT.md) for release steps.
