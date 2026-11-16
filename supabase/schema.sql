@@ -54,17 +54,19 @@ create table attempts (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null default auth.uid(),
   created_at timestamptz default now(),
+  question_ids uuid[] not null default '{}', -- fixed at the start of each quiz
   submitted_at timestamptz
 );
 
 create table answers (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null default auth.uid(),
-  attempt_id uuid not null references attempts on delete cascade,
-  question_id uuid not null references questions on delete cascade,
+  attempt_id uuid not null references attempts on delete restrict,
+  question_id uuid not null references questions on delete restrict,
   selected_index int not null check (selected_index between 0 and 3),
   confidence text not null check (confidence in ('sure','guessing')),
-  is_correct boolean not null
+  is_correct boolean not null,
+  unique (attempt_id, question_id)
 );
 
 create table plans (
