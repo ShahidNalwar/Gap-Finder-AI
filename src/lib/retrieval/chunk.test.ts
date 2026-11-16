@@ -32,4 +32,12 @@ describe("chunkText", () => {
     const chunks = chunkText([{ page: 1, text: "First page." }, { page: 2, text: "Second page." }]);
     expect(chunks[1]).toEqual({ content: "Second page.", section: "page 2" });
   });
+  it("preserves an outline-only syllabus when headings are its content", () => {
+    const chunks = chunkText([{ page: 1, text: "1. Photosynthesis\n1.1 Raw materials and products\n2. Respiration\n2.1 Aerobic respiration" }], true);
+    const text = chunks.map((chunk) => chunk.content).join("\n");
+    expect(text).toContain("1. Photosynthesis");
+    expect(text).toContain("1.1 Raw materials and products");
+    expect(text).toContain("2. Respiration");
+    expect(text).toContain("2.1 Aerobic respiration");
+  });
 });

@@ -6,7 +6,7 @@ import { chunkText, type TextPage } from "@/lib/retrieval/chunk";
 export async function ingestDocument(supabase: DbClient, userId: string, name: string, kind: DocumentKind, pages: TextPage[]) {
   const total = pages.reduce((sum, page) => sum + page.text.length, 0);
   if (total > 200_000) throw new AppError("This document is too long. Upload a chapter at a time (maximum 200,000 characters).");
-  const chunks = chunkText(pages);
+  const chunks = chunkText(pages, kind === "syllabus");
   if (!chunks.length) throw new AppError("No readable text was found. Scanned PDFs need OCR first; try a text-based PDF or .txt file.");
   const { data, error } = await supabase.from("documents")
     .insert({ user_id: userId, name: name.slice(0, 200), kind }).select("id").single();

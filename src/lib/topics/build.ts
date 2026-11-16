@@ -49,11 +49,17 @@ export async function buildTopics(supabase: DbClient, userId: string, rebuild: b
     checkDb(result.error);
     const content = z.array(z.object({ content: z.string() })).parse(result.data ?? []);
     for (const question of splitPastQuestions(content.map((chunk) => chunk.content))) {
-      const retrieved = await searchChunks(supabase, question, 4, ["syllabus"]);
+      // Notes bridge vocabulary such as "diaphragm" to the syllabus heading "Breathing in humans".
+      const notes = await searchChunks(supabase, question, 3, ["notes"]);
+      const syllabus = await searchChunks(supabase, `${question} ${notes.map((note) => note.section ?? "").join(" ")}`, 4, ["syllabus"]);
+      const retrieved = [...syllabus, ...notes];
       if (!retrieved.length) { mapped.push({ document_id: documentId, text: question, topic: "none" }); continue; }
-      // Retrieved candidate syllabus passages; select only from the extracted topic names.
-      const match = await structured(z.object({ topic: z.string() }), prompts.mapping, { question, candidates: names, passages: retrieved }, true);
-      mapped.push({ document_id: documentId, text: question, topic: names.includes(match.topic) ? match.topic : "none" });
+      const evidence = normalize(retrieved.map((passage) => `${passage.section ?? ""} ${passage.content}`).join(" "));
+      const candidates = tree.topics.filter((topic) => [topic.name, ...topic.subtopics].some((name) => evidence.includes(normalize(name)))).map((topic) => topic.name);
+      if (!candidates.length) { mapped.push({ document_id: documentId, text: question, topic: "none" }); continue; }
+      // Retrieved notes and candidate syllabus passages; select only an evidence-backed topic name.
+      const match = await structured(z.object({ topic: z.string() }), prompts.mapping, { question, candidates, passages: retrieved }, true);
+      mapped.push({ document_id: documentId, text: question, topic: candidates.includes(match.topic) ? match.topic : "none" });
     }
   }
 

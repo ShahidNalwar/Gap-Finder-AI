@@ -4,7 +4,7 @@ export type TextChunk = { content: string; section: string };
 const TARGET = 800;
 const OVERLAP = 100;
 
-export function chunkText(pages: TextPage[]): TextChunk[] {
+export function chunkText(pages: TextPage[], includeHeadings = false): TextChunk[] {
   const chunks: TextChunk[] = [];
   let chapter = "";
   let heading = "";
@@ -31,6 +31,8 @@ export function chunkText(pages: TextPage[]): TextChunk[] {
         if (isChapter) { chapter = line; heading = ""; }
         else heading = chapter ? `${chapter}, ${line}` : line;
         section = heading || chapter;
+        // A syllabus may consist entirely of headings; never discard its outline.
+        if (includeHeadings) buffer = line;
         continue;
       }
       const sentences = line.match(/[^.!?]+(?:[.!?]+(?=\s|$)|$)/g) ?? [line];
