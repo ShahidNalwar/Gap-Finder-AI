@@ -31,11 +31,11 @@ export function QuizRunner() {
     if (!quiz) return;
     setBusy(true); setError("");
     try {
-      const result = await requestJson("/api/quiz/submit", z.object({ attemptId: z.string() }), {
+      const result = await requestJson("/api/quiz/submit", z.object({ attemptId: z.string(), planWarning: z.string().nullable() }), {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ attemptId: quiz.attemptId, answers: Object.values(answers) }),
       });
-      router.push(`/report/${result.attemptId}`);
+      router.push(`/report/${result.attemptId}${result.planWarning ? "?planWarning=1" : ""}`);
     } catch (e) { setError(e instanceof Error ? e.message : "Couldn't submit quiz."); setBusy(false); }
   }
   const question = quiz?.questions[index];
