@@ -51,6 +51,12 @@ retried once. Calls share a paced queue within each server process. Rate-limited
 calls honor Groq's Retry-After (or token-reset) header with at most three total
 attempts. Long cooldowns and daily quotas produce actionable messages rather
 than repeatedly retrying; saved material is unchanged.
+Topic-note retrieval is shared by quizzes and plans: it includes subtopics,
+checks section headings when body keywords miss, and reuses the current topic's
+verified quiz-source chunks when planning. This applies to every topic, not a
+hard-coded sample subject. Genuinely unavailable evidence is reported without
+inventing tips or asking students to re-upload material merely because a label
+didn't match.
 
 Question acceptance requires a retrieved chunk ID, a whitespace-normalized exact
 source quote, distinct options, appropriate misconception entries, and an
@@ -163,6 +169,10 @@ current session only.
   with valid quotes and independent grounding checks. These small runs are not a general accuracy benchmark.
 - Actual pdf-parse extraction was verified with a text-based PDF buffer.
 - Sample past-paper parsing found all ten questions.
+- Isolated retrieval checks covered heading-only sources for Photosynthesis,
+  Respiration, Human Digestion, Transportation, Algebra, and Cell Division,
+  plus exact-citation fallback and genuinely missing material. Plan retrieval
+  keeps citations scoped to the current topic and leaves scores/minutes unchanged.
 - Expected sample exam counts: Photosynthesis 3, Respiration 3, Human Digestion 2,
   Transportation 2. Two questions per topic gives an eight-question sample quiz.
 - Full authenticated upload → retake flow still needs checking after the migration

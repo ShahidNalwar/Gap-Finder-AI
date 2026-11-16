@@ -4,7 +4,7 @@ import { AppError, checkDb, type DbClient } from "@/lib/api";
 import { buildReport } from "@/lib/reports/build";
 import { createPlan } from "@/lib/scoring/plan";
 import { savedPlanSchema } from "@/lib/plans/schema";
-import { searchChunks } from "@/lib/retrieval/search";
+import { searchTopicNotes } from "@/lib/retrieval/search";
 import { structured } from "@/lib/ai/model";
 import { tipsSchema } from "@/lib/ai/schemas";
 import { prompts } from "@/lib/ai/prompts";
@@ -20,10 +20,15 @@ export async function generatePlan(supabase: DbClient, userId: string, attemptId
   catch (error) { throw new AppError(error instanceof Error ? error.message : "Invalid time budget."); }
   const warnings: string[] = [];
   for (const item of plan.items) {
-    // Topic labels may occur only in headings; include subtopics just as quiz retrieval does.
-    const query = [item.name, ...report.topics.filter((topic) => topic.parent_id === item.topicId).map((topic) => topic.name)].join(" ");
-    const passages = await searchChunks(supabase, query, 3, ["notes"]);
-    if (!passages.length) { warnings.push(`${item.name}: upload matching notes to get source-based tips.`); continue; }
+    const passages = await searchTopicNotes(supabase, {
+      name: item.name,
+      subtopics: report.topics.filter((topic) => topic.parent_id === item.topicId).map((topic) => topic.name),
+      sourceChunkIds: report.reviews.filter((review) => review.topic_id === item.topicId).map((review) => review.chunk_id),
+    });
+    if (!passages.length) {
+      warnings.push(`${item.name}: source-based tips are temporarily unavailable; your revision schedule is still saved.`);
+      continue;
+    }
     const facts = report.scores.find((score) => score.id === item.topicId)!;
     try {
       // Retrieved notes for this topic; generate only two tips, never order, priority, or minutes.

@@ -5,7 +5,7 @@ import { AppError, checkDb, type DbClient } from "@/lib/api";
 import { structured } from "@/lib/ai/model";
 import { prompts } from "@/lib/ai/prompts";
 import { questionBatchSchema, topicSchema, verifierSchema } from "@/lib/ai/schemas";
-import { searchChunks } from "@/lib/retrieval/search";
+import { searchTopicNotes } from "@/lib/retrieval/search";
 
 function normalize(text: string) { return text.replace(/\s+/g, " ").trim(); }
 
@@ -31,8 +31,10 @@ export async function generateQuiz(supabase: DbClient, userId: string, regenerat
       accepted += existing.data.length;
       continue;
     }
-    const query = [topic.name, ...allTopics.filter((child) => child.parent_id === topic.id).map((child) => child.name)].join(" ");
-    const passages = await searchChunks(supabase, query, 5, ["notes"]);
+    const passages = await searchTopicNotes(supabase, {
+      name: topic.name,
+      subtopics: allTopics.filter((child) => child.parent_id === topic.id).map((child) => child.name),
+    }, 5);
     if (!passages.length) {
       warnings.push(`${topic.name}: no matching notes. Upload notes for this topic.`);
       continue;
