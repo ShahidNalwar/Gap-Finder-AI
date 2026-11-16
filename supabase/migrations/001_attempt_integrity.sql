@@ -4,6 +4,16 @@ begin;
 alter table public.attempts
   add column if not exists question_ids uuid[] not null default '{}';
 
+-- Backfill old submitted attempts without changing their saved answers.
+update public.attempts as attempt
+set question_ids = array(
+  select answer.question_id from public.answers as answer
+  where answer.attempt_id = attempt.id and answer.user_id = attempt.user_id
+  order by answer.id
+)
+where cardinality(attempt.question_ids) = 0
+  and exists (select 1 from public.answers as answer where answer.attempt_id = attempt.id and answer.user_id = attempt.user_id);
+
 alter table public.answers drop constraint if exists answers_attempt_id_fkey;
 alter table public.answers drop constraint if exists answers_question_id_fkey;
 alter table public.answers

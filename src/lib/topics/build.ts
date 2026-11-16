@@ -33,6 +33,11 @@ export async function buildTopics(supabase: DbClient, userId: string, rebuild: b
 
   // Retrieved the user's syllabus chunks; generate only its topic hierarchy.
   const tree = await structured(topicTreeSchema, prompts.topics, { passages });
+  const normalize = (text: string) => text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  const sourceText = normalize(passages.map((passage) => `${passage.section ?? ""} ${passage.content}`).join(" "));
+  if (tree.topics.some((topic) => !sourceText.includes(normalize(topic.name)) || topic.subtopics.some((name) => !sourceText.includes(normalize(name))))) {
+    throw new AppError("The generated map used names not found in your syllabus. Please try again.", 502);
+  }
   const names = tree.topics.map((topic) => topic.name);
   if (new Set(names.map((name) => name.toLowerCase())).size !== names.length) {
     throw new AppError("The topic map contained duplicates. Please rebuild it.", 502);
