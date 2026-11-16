@@ -183,6 +183,11 @@ current session only.
   note sections, parsed all ten complete paper questions, and verified fresh
   loading, duplicate avoidance, and protection of old material using a local
   database stub. No remote student records or AI quota were used.
+- Reset safety checks covered invalid/extra confirmation fields, authentication
+  and origin rejection, missing-migration feedback, Cancel/no-request behavior,
+  typed confirmation, and the fresh-page redirect using local stubs. SQL was
+  checked for owner-scoped deletes and correct dependency order; no real reset
+  or rollback test has been executed against student data.
 - Isolated retrieval checks covered heading-only sources for Photosynthesis,
   Respiration, Human Digestion, Transportation, Algebra, and Cell Division,
   plus exact-citation fallback and genuinely missing material. Plan retrieval
@@ -230,6 +235,25 @@ Use a **fresh test account**. The loader gives this version distinct document
 names and refuses to combine it with an account's existing material. Previously
 uploaded Biology documents, quiz questions, attempts, and plans remain untouched;
 changing these local fixture files does not replace saved student data.
+
+### Clear existing material and start again
+
+On **Upload**, open **Reset study workspace** at the bottom of the page. Review
+the deletion list and type `DELETE MY STUDY DATA`, then confirm. Cancel changes
+nothing. Your login account/password remain; documents, topics, questions,
+attempts, answers, reports, progress, plans, and online sheets are permanently
+removed. Download any revision PDFs you want to keep first.
+
+For an existing database, run
+`supabase/migrations/002_reset_study_workspace.sql` once in the Supabase SQL
+Editor. This only installs the action; it does not delete data. Fresh databases
+get the function from `schema.sql`. The authenticated, same-origin API calls a
+security-invoker function with no user-ID argument; each delete uses `auth.uid()`
+and RLS. Deletion is one database transaction, so failures roll back the reset.
+
+Wait for uploads/AI work in all tabs to finish before resetting. After a
+successful reset, the page reloads to clear stale state and you can load the new
+sample using the same account. A fresh test account is still an alternative.
 
 ## Keep an offline revision sheet
 

@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     const existing = await supabase.from("documents").select("name").eq("user_id", userId);
     checkDb(existing.error);
     if (existing.data?.some((document) => !String(document.name).startsWith(`${SAMPLE_PACK.documentPrefix}: `))) {
-      throw new AppError("This account already has study material. Use a fresh test account for the new Electricity sample so subjects do not mix. Your existing documents and results have not been changed.", 409);
+      throw new AppError("This account already has study material. Use Reset study workspace on Upload (this deletes study data after confirmation), or use a fresh test account for the Electricity sample. Nothing has been changed by this request.", 409);
     }
     let loaded = 0;
     for (const kind of ["syllabus", "notes", "past_paper"] as DocumentKind[]) {

@@ -6,6 +6,7 @@ import { z } from "zod";
 import { requestJson } from "@/lib/http";
 import { Icon } from "@/components/ui/icon";
 import { SAMPLE_PACK } from "@/lib/documents/sample-pack";
+import { WorkspaceReset } from "@/components/workspace-reset";
 
 const documentSchema = z.object({ id: z.string(), name: z.string(), kind: z.string(), created_at: z.string() });
 const documentsSchema = z.object({ documents: z.array(documentSchema) });
@@ -84,7 +85,7 @@ export function UploadForm() {
           <p className="mt-4 text-sm leading-7 text-teal-900/65">Explore {SAMPLE_PACK.level} with a complete {SAMPLE_PACK.name} study pack. No files to hunt for.</p>
           <div className="my-6 flex flex-wrap gap-2">{["1 syllabus", "4 topics", "10 exam questions"].map((label) => <span key={label} className="rounded-lg border border-teal-100 bg-white/80 px-2.5 py-1.5 text-[11px] font-semibold text-teal-800">{label}</span>)}</div>
           <button className="button-secondary mt-auto self-start !border-teal-200 !text-teal-900" onClick={sample} disabled={!!busy}>{busy === "sample" ? "Loading sample…" : "Load sample data"}<Icon name="arrow" className="h-4 w-4" /></button>
-          <p className="mt-4 text-[11px] leading-5 text-teal-900/55">Use a fresh account to test this subject. Already-loaded files won&apos;t be added again; existing study data is never replaced.</p>
+          <p className="mt-4 text-[11px] leading-5 text-teal-900/55">Use a fresh account, or <a href="#reset-heading" className="font-semibold underline underline-offset-2">reset your study workspace below</a>. Loading the sample never replaces existing data or adds duplicate sample files.</p>
         </section>
       </div>
       <section className="surface p-6 sm:p-7">
@@ -109,6 +110,7 @@ export function UploadForm() {
         </form>
         {passages && (passages.length ? passages.map((passage) => <blockquote key={passage.id} className="mt-5 border-l-2 border-teal-600 pl-4 text-sm leading-6"><strong>{passage.section ?? "Source"} · {passage.kind}</strong><p>{passage.content}</p></blockquote>) : <p className="mt-4 text-slate-500">No matching passages found.</p>)}
       </details>
+      <WorkspaceReset disabled={loading || !!busy} onBusyChange={(pending) => setBusy(pending ? "reset" : "")} />
     </div>
   );
 }

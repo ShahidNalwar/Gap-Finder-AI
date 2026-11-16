@@ -1,7 +1,9 @@
 # Electricity and Circuits sample (v2)
 
 This pack replaces the original Life Processes Biology fixture. Use a **fresh
-test account** and click **Load sample data** on Upload. The loader uses versioned
+test account**, or explicitly reset your existing study workspace on Upload,
+then click **Load sample data**. Reset permanently deletes the old study data
+but keeps your account. The loader uses versioned
 names, avoids duplicate files, and refuses to mix this pack with existing study
 material. It never deletes old documents, quizzes, attempts, or plans.
 

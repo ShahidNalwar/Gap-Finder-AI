@@ -4,6 +4,8 @@
 
 - [ ] For a new database run `supabase/schema.sql` once.
 - [ ] For an existing original database run `supabase/migrations/001_attempt_integrity.sql`.
+- [ ] Run `supabase/migrations/002_reset_study_workspace.sql` to install the
+  confirmed reset action on an existing database. Installing it deletes nothing.
 - [ ] Keep RLS enabled on every application table.
 - [ ] Enable email/password Auth and create a demo student account.
 - [ ] If confirmation is enabled, confirm the account before sharing it.
@@ -43,6 +45,9 @@
   sheet URL still shows the older snapshot after a retake.
 - [ ] Explain an in-scope topic with citations; ask an out-of-scope question and verify refusal.
 - [ ] Sign out → protected pages and APIs are unavailable.
+- [ ] On a disposable test account only, verify Reset requires the exact typed
+  phrase, Cancel changes nothing, and a confirmed reset clears study data while
+  keeping login working. Never use the demo account for destructive smoke tests.
 - [ ] Add the verified live URL and public demo credentials to README.md.
 
 The coding agent has not provisioned a GitHub/Vercel project, changed remote
