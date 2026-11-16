@@ -17,8 +17,8 @@ async function generateStructured<T>(schema: z.ZodType<T>, system: string, input
     try {
       await paceAi();
       const modelId = fast
-        ? process.env.GROQ_FAST_MODEL || "llama-3.1-8b-instant"
-        : process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
+        ? process.env.GROQ_FAST_MODEL || "openai/gpt-oss-20b"
+        : process.env.GROQ_MODEL || "openai/gpt-oss-120b";
       // Callers supply only retrieved passages and deterministic facts; never a general-knowledge prompt.
       const { output } = await generateText({
         model: groq(modelId),

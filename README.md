@@ -105,8 +105,8 @@ Create an ignored `.env.local` (or use an existing `.env`) containing:
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-public-publishable-key
 GROQ_API_KEY=your-server-only-key
-GROQ_MODEL=llama-3.3-70b-versatile
-GROQ_FAST_MODEL=llama-3.1-8b-instant
+GROQ_MODEL=openai/gpt-oss-120b
+GROQ_FAST_MODEL=openai/gpt-oss-20b
 ```
 
 `NEXT_PUBLIC_SUPABASE_ANON_KEY` is also accepted for projects using the legacy
@@ -114,6 +114,10 @@ public anon key. Never put a service-role or secret Supabase key in a public
 variable. Groq model availability varies: verify IDs in your Groq console.
 The configured account currently uses approved local overrides
 `openai/gpt-oss-120b` and `openai/gpt-oss-20b`; these also need setting on Vercel.
+These are also the code defaults: the 120B production model handles generation,
+and the faster, cheaper 20B production model handles verification, mapping, and
+tips. Newer preview models are not automatically selected; model changes do not
+remove account-level API quotas.
 
 In Supabase Authentication:
 
