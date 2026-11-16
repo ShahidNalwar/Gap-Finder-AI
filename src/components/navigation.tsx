@@ -32,7 +32,7 @@ export function Navigation({ email }: { email: string }) {
   }
 
   return (
-    <header className="border-b border-slate-200 bg-white">
+    <header className="border-b border-slate-200 bg-white print:hidden">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-5 px-6 py-5">
         <Link href="/upload" className="text-xl font-bold tracking-tight">GapFinder <span className="text-teal-700">AI</span></Link>
         <div className="flex items-center gap-4">

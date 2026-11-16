@@ -17,6 +17,7 @@ The diagnosis—not a chatbot—is the main output.
 | `/quiz` | Cached source-grounded MCQs, verification counts, confidence choices |
 | `/report/[attemptId]` | Weak/medium/strong diagnosis, blind spots, per-answer explanations and citations |
 | `/plan` | Time-budgeted revision, grounded tips, priority/mastery changes after retakes |
+| `/plan/[planId]/print` | Printable revision sheet: daily checklists, mistakes, saved tips, and source quotes |
 | `/dashboard` | Topic mastery across the latest 20 submitted attempts and latest plan |
 | `/chat` | Explain-this-topic helper using only own material, with citations and exact refusal |
 
@@ -182,6 +183,9 @@ current session only.
   Respiration, Human Digestion, Transportation, Algebra, and Cell Division,
   plus exact-citation fallback and genuinely missing material. Plan retrieval
   keeps citations scoped to the current topic and leaves scores/minutes unchanged.
+- Revision-sheet checks verified owner-scoped plan loading, rejection of foreign
+  and invalid plan IDs, daily checklist rendering, visible/escaped source quotes,
+  and PDF layout using a synthetic sample. Export makes no AI calls or database writes.
 - Expected sample exam counts: Photosynthesis 3, Respiration 3, Human Digestion 2,
   Transportation 2. Two questions per topic gives an eight-question sample quiz.
 - Full authenticated upload → retake flow still needs checking after the migration
@@ -204,6 +208,20 @@ current session only.
 5. Build a plan with five days and two hours/day.
 6. Retake with improved answers; compare the updated plan and Dashboard.
 7. Ask Chat for an in-scope explanation, then ask an unrelated question to show refusal.
+
+## Keep an offline revision sheet
+
+On a saved plan, click **Print / Save as PDF** to open its revision sheet in a new
+tab. Click the print button there and choose **Save as PDF** (or a printer).
+The sheet includes a daily checklist, prioritized topic guides, mastery and
+mistake facts, saved revision tips, correct answers/explanations, and visible
+source quotes. Navigation and print controls are excluded from the printed copy.
+
+The sheet uses the exact saved plan ID and its submitted attempt, not whichever
+plan is newest. Its dates identify the snapshot; save a new sheet after a retake.
+It requires sign-in, respects ownership/RLS, makes no additional AI calls, and
+does not change your scores, minutes, or uploaded material. Checkboxes can be
+ticked on the page or paper; page checkmarks are not persisted.
 
 ## Limitations
 

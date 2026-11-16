@@ -36,6 +36,10 @@
 - [ ] Submit mixed-confidence answers → verify labels, blind spots, misconceptions.
 - [ ] Build plan → ensure order and minutes fit five days × two hours/day.
 - [ ] Retake → verify plan/mastery changes and Dashboard history.
+- [ ] On Plan, open **Print / Save as PDF**; verify daily checklists, mistakes,
+  saved tips, and visible source quotes. Save the PDF and reopen it offline.
+- [ ] Verify the sheet's dates match its saved plan/attempt and that an older
+  sheet URL still shows the older snapshot after a retake.
 - [ ] Explain an in-scope topic with citations; ask an out-of-scope question and verify refusal.
 - [ ] Sign out → protected pages and APIs are unavailable.
 - [ ] Add the verified live URL and public demo credentials to README.md.

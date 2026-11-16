@@ -1,10 +1,14 @@
+import Link from "next/link";
 import type { SavedPlan } from "@/lib/plans/schema";
 
 export function RevisionPlan({ plan }: { plan: SavedPlan }) {
   return (
     <section className="mt-8 space-y-5">
       <div className="rounded-2xl bg-slate-950 p-6 text-white">
-        <h2 className="text-xl font-bold">Your priorities, in order</h2>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <h2 className="text-xl font-bold">Your priorities, in order</h2>
+          {plan.attempt_id && <Link className="button-secondary" href={`/plan/${plan.id}/print`} target="_blank" rel="noopener noreferrer">Print / Save as PDF <span className="sr-only">(opens a new tab)</span></Link>}
+        </div>
         <p className="mt-3 text-sm text-slate-300">{plan.data.totalMinutes} minutes available · {plan.days} days · {plan.hours_per_day} hours/day</p>
         {plan.data.unallocatedMinutes > 0 && <p className="mt-2 text-sm text-amber-200">{plan.data.unallocatedMinutes} minutes unallocated: complete a diagnostic for more topics.</p>}
       </div>

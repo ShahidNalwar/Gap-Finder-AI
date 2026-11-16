@@ -7,6 +7,40 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.revision-check {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  margin-top: .2rem;
+  padding: 0;
+  accent-color: #115e59;
+}
+
+@page revision-sheet {
+  size: A4;
+  margin: 14mm;
+}
+
+@media print {
+  :root, body { background: white; color: #111827; }
+  .revision-sheet {
+    page: revision-sheet;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    font-size: 10pt;
+  }
+  .revision-sheet h1, .revision-sheet h2, .revision-sheet h3, .revision-sheet h4 {
+    break-after: avoid-page;
+  }
+  .revision-day, .revision-question, .revision-sheet-heading {
+    break-inside: avoid-page;
+  }
+  .revision-sheet blockquote { orphans: 3; widows: 3; }
+  .revision-check { appearance: auto; }
+}
+
 body { margin: 0; }
 button, input { font: inherit; }
 button, a, input { -webkit-tap-highlight-color: transparent; }
