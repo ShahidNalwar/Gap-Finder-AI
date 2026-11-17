@@ -34,8 +34,8 @@ export function TopicMap() {
   return (
     <div className="mt-8 space-y-6">
       <div className="flex flex-wrap items-center gap-4">
-        <button className="button-primary" onClick={build} disabled={busy || loading}>{busy ? "Reading syllabus and mapping papers…" : roots.length ? "Rebuild topic map" : "Build topic map"}</button>
-        {!!roots.length && <Link href="/quiz" className="text-sm font-semibold text-teal-800 underline">Take a diagnostic quiz →</Link>}
+        <button className={roots.length ? "button-secondary" : "button-primary"} onClick={build} disabled={busy || loading}>{busy ? "Reading syllabus and mapping papers…" : roots.length ? "Rebuild topic map" : "Build topic map"}</button>
+        {!!roots.length && <Link href="/quiz" className="button-primary">Next: take diagnostic quiz <Icon name="arrow" className="h-4 w-4" /></Link>}
       </div>
       {busy && <p role="status" className="text-sm text-slate-500">Reading your material. If Groq is busy, requests wait and retry automatically (up to three attempts). This can take a few minutes; please don&apos;t start another build.</p>}
       {error && <p role="alert" className="notice-error">{error}</p>}

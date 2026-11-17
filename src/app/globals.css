@@ -63,6 +63,8 @@ input[type="file"]::file-selector-button { margin-right: 1rem; border: 0; border
   .surface-hover:hover { border-color: #bcd5d1; box-shadow: 0 10px 30px -15px #115e5925; transform: translateY(-2px); }
 }
 @keyframes enter-workspace { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+.navigation-spinner { display: inline-block; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: navigation-spin .7s linear infinite; }
+@keyframes navigation-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   .surface-hover:hover { transform: none; }
@@ -71,7 +73,7 @@ input[type="file"]::file-selector-button { margin-right: 1rem; border: 0; border
 
 @layer components {
   .button-primary {
-    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-teal-800 bg-teal-800 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:border-teal-900 hover:bg-teal-900 hover:shadow-md active:translate-y-px disabled:translate-y-0 disabled:shadow-none;
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-teal-700 bg-gradient-to-br from-teal-600 to-teal-800 px-6 py-3 text-sm font-bold text-white shadow-md shadow-teal-900/20 transition hover:from-teal-500 hover:to-teal-800 hover:shadow-lg hover:shadow-teal-900/25 active:translate-y-px disabled:translate-y-0 disabled:shadow-none;
   }
   .button-secondary {
     @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:border-teal-200 hover:bg-teal-50 hover:text-teal-900 active:translate-y-px disabled:translate-y-0;

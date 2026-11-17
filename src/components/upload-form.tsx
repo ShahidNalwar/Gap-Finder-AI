@@ -91,7 +91,7 @@ export function UploadForm() {
       <section className="surface p-6 sm:p-7">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="flex items-center gap-3 text-lg font-semibold text-slate-900">Your library {!loading && <span className="rounded-lg bg-slate-100 px-2 py-1 text-xs font-medium text-slate-500">{documents.length}</span>}</h2>
-          {!!documents.length && <Link className="inline-flex items-center gap-2 text-xs font-semibold text-teal-800 hover:underline" href="/topics">Continue to topic map<Icon name="arrow" className="h-4 w-4" /></Link>}
+          {!!documents.length && <Link className="button-primary" href="/topics">Next: build topic map<Icon name="arrow" className="h-4 w-4" /></Link>}
         </div>
         {loading ? <p role="status" className="mt-6 animate-pulse text-sm text-slate-400">Loading your library…</p> : !documents.length ? <div className="mt-5 flex flex-col items-center rounded-xl border border-dashed border-slate-200 px-4 py-9 text-center"><Icon name="file" className="mb-3 h-8 w-8 text-slate-300" /><p className="text-sm font-semibold text-slate-600">A fresh start.</p><p className="mt-2 max-w-sm text-xs leading-6 text-slate-400">Your documents will appear here. Add a syllabus and notes, or explore with the sample pack.</p></div> : (
           <ul className="mt-4 divide-y divide-slate-100">{documents.map((document) => (

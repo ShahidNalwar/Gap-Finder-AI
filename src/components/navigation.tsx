@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Icon, type IconName } from "@/components/ui/icon";
@@ -13,6 +13,20 @@ const links = [
   { href: "/chat", label: "Chat", icon: "chat" },
   { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
 ] satisfies { href: string; label: string; icon: IconName }[];
+
+function NavigationLabel({ label, icon }: { label: string; icon: IconName }) {
+  const { pending } = useLinkStatus();
+  return <>
+    <span className="relative h-4 w-4 shrink-0" aria-hidden="true">
+      {pending ? <span className="navigation-spinner absolute inset-0" /> : <Icon name={icon} className="h-4 w-4" />}
+    </span>
+    {pending ? `Opening ${label}…` : label}
+    {pending && <>
+      <span className="absolute inset-0 rounded-t-xl bg-teal-600/10" aria-hidden="true" />
+      <span role="status" className="sr-only">Opening {label}…</span>
+    </>}
+  </>;
+}
 
 export function Navigation({ email }: { email: string }) {
   const pathname = usePathname();
@@ -52,7 +66,7 @@ export function Navigation({ email }: { email: string }) {
             const active = pathname === href || pathname.startsWith(`${href}/`) || (href === "/quiz" && pathname.startsWith("/report/"));
             return <Link key={href} href={href} aria-current={active ? "page" : undefined}
               className={`relative inline-flex shrink-0 items-center gap-2 border-b-2 px-3 py-4 text-[13px] font-semibold transition sm:px-4 ${active ? "border-teal-700 text-teal-800" : "border-transparent text-slate-500 hover:border-slate-200 hover:text-slate-700"}`}>
-              <Icon name={icon} className="h-4 w-4" />{label}
+              <NavigationLabel label={label} icon={icon} />
             </Link>;
           })}
         </nav>

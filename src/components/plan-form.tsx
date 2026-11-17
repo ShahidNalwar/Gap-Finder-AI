@@ -43,7 +43,7 @@ export function PlanForm({ attemptId }: { attemptId?: string }) {
   }
   return <div className="mt-8">
     {error && <p role="alert" className="notice-error mb-5">{error}</p>}
-    {loading ? <p role="status">Loading your plan…</p> : !target ? <p className="text-slate-500">Complete a <Link className="underline" href="/quiz">diagnostic quiz</Link> first so your plan reflects your actual gaps.</p> : (
+    {loading ? <p role="status">Loading your plan…</p> : !target ? <div className="surface space-y-4 p-6"><p className="text-slate-500">Complete a diagnostic quiz first so your plan reflects your actual gaps.</p><Link className="button-primary" href="/quiz">Take diagnostic quiz <Icon name="arrow" className="h-4 w-4" /></Link></div> : (
       <form className="surface p-6 sm:p-7" onSubmit={generate}>
         <div className="mb-6 flex items-center gap-3"><span className="icon-tile"><Icon name="clock" /></span><div><h2 className="text-base font-semibold text-slate-900">Make time for what matters.</h2><p className="mt-1 text-xs text-slate-400">Tell us what fits your day. We&apos;ll work within it.</p></div></div>
         <div className="grid items-end gap-4 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_auto]">
@@ -55,6 +55,6 @@ export function PlanForm({ attemptId }: { attemptId?: string }) {
     )}
     {busy && <p role="status" className="mt-4 text-sm text-slate-500">Order and minutes are calculated in code. AI only adds source-based revision tips.</p>}
     {warnings.map((warning) => <p key={warning} role="status" className="mt-3 text-sm text-amber-800">{warning}</p>)}
-    {plan && <><RevisionPlan plan={plan} /><Link href={`/report/${plan.attempt_id}`} className="mt-6 inline-block text-sm font-semibold text-teal-800 underline">View the diagnosis behind this plan →</Link></>}
+    {plan && <><RevisionPlan plan={plan} /><div className="mt-6 flex flex-wrap gap-3"><Link href="/quiz" className="button-primary">Next: retake and track improvement <Icon name="arrow" className="h-4 w-4" /></Link><Link href={`/report/${plan.attempt_id}`} className="button-secondary">View the diagnosis behind this plan</Link></div></>}
   </div>;
 }
