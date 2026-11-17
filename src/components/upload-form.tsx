@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
 import { useEffect, useState, type FormEvent } from "react";
 import { z } from "zod";
 import { requestJson } from "@/lib/http";
@@ -11,6 +11,14 @@ import { WorkspaceReset } from "@/components/workspace-reset";
 const documentSchema = z.object({ id: z.string(), name: z.string(), kind: z.string(), created_at: z.string() });
 const documentsSchema = z.object({ documents: z.array(documentSchema) });
 const searchSchema = z.object({ passages: z.array(z.object({ id: z.string(), content: z.string(), section: z.string().nullable(), kind: z.string() })) });
+
+function ViewDocumentLabel() {
+  const { pending } = useLinkStatus();
+  return <span className="inline-flex min-w-32 items-center justify-center gap-2" role={pending ? "status" : undefined}>
+    {pending ? <span className="navigation-spinner h-4 w-4" aria-hidden="true" /> : <Icon name="book" className="h-4 w-4" />}
+    {pending ? "Opening…" : "View document"}
+  </span>;
+}
 
 export function UploadForm() {
   const [documents, setDocuments] = useState<z.infer<typeof documentSchema>[]>([]);
@@ -98,7 +106,7 @@ export function UploadForm() {
             <li key={document.id} className="flex flex-wrap items-center justify-between gap-3 py-4">
               <div className="flex min-w-0 items-center gap-3"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-50 text-slate-400"><Icon name="file" className="h-5 w-5" /></span><div className="min-w-0"><p className="truncate text-sm font-medium text-slate-700" title={document.name}>{document.name}</p><p className="mt-1 text-[11px] text-slate-400">Added {new Date(document.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" })}</p></div></div>
               <div className="flex shrink-0 flex-wrap items-center gap-3"><span className={`rounded-lg px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wide ${document.kind === "syllabus" ? "bg-teal-50 text-teal-700" : document.kind === "past_paper" ? "bg-amber-50 text-amber-700" : "bg-slate-100 text-slate-500"}`}>{document.kind.replace("_", " ")}</span>
-                <Link className="button-secondary" href={`/upload/${document.id}`} aria-label={`View ${document.name}`}><Icon name="book" className="h-4 w-4" />View document</Link>
+                <Link className="button-secondary" href={`/upload/${document.id}`} aria-label={`View ${document.name}`}><ViewDocumentLabel /></Link>
               </div>
             </li>
           ))}</ul>
