@@ -95,9 +95,11 @@ export function UploadForm() {
         </div>
         {loading ? <p role="status" className="mt-6 animate-pulse text-sm text-slate-400">Loading your library…</p> : !documents.length ? <div className="mt-5 flex flex-col items-center rounded-xl border border-dashed border-slate-200 px-4 py-9 text-center"><Icon name="file" className="mb-3 h-8 w-8 text-slate-300" /><p className="text-sm font-semibold text-slate-600">A fresh start.</p><p className="mt-2 max-w-sm text-xs leading-6 text-slate-400">Your documents will appear here. Add a syllabus and notes, or explore with the sample pack.</p></div> : (
           <ul className="mt-4 divide-y divide-slate-100">{documents.map((document) => (
-            <li key={document.id} className="flex items-center justify-between gap-3 py-4">
+            <li key={document.id} className="flex flex-wrap items-center justify-between gap-3 py-4">
               <div className="flex min-w-0 items-center gap-3"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-50 text-slate-400"><Icon name="file" className="h-5 w-5" /></span><div className="min-w-0"><p className="truncate text-sm font-medium text-slate-700" title={document.name}>{document.name}</p><p className="mt-1 text-[11px] text-slate-400">Added {new Date(document.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" })}</p></div></div>
-              <span className={`shrink-0 rounded-lg px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wide ${document.kind === "syllabus" ? "bg-teal-50 text-teal-700" : document.kind === "past_paper" ? "bg-amber-50 text-amber-700" : "bg-slate-100 text-slate-500"}`}>{document.kind.replace("_", " ")}</span>
+              <div className="flex shrink-0 flex-wrap items-center gap-3"><span className={`rounded-lg px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wide ${document.kind === "syllabus" ? "bg-teal-50 text-teal-700" : document.kind === "past_paper" ? "bg-amber-50 text-amber-700" : "bg-slate-100 text-slate-500"}`}>{document.kind.replace("_", " ")}</span>
+                <Link className="button-secondary" href={`/upload/${document.id}`} aria-label={`View ${document.name}`}><Icon name="book" className="h-4 w-4" />View document</Link>
+              </div>
             </li>
           ))}</ul>
         )}

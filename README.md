@@ -17,6 +17,7 @@ No shared demo credentials are provided; use sign-up.
 |---|---|
 | `/login` | Email/password signup, confirmation callback, cookie-based sessions |
 | `/upload` | PDF/text upload, sample-data loading, document list, retrieval preview |
+| `/upload/[documentId]` | Private document viewer with saved source passages, section labels, text search, and pagination |
 | `/topics` | Explicit topic-map build and past-paper frequency heatmap |
 | `/quiz` | Cached source-grounded MCQs, verification counts, confidence choices |
 | `/report/[attemptId]` | Weak/medium/strong diagnosis, blind spots, per-answer explanations and citations |
@@ -174,7 +175,8 @@ current session only.
 
 ## Evaluation and verification status
 
-- **27 unit tests pass:** chunking, scoring, and planning only.
+- **34 unit tests pass:** chunking, scoring, planning, and document-viewer data
+  loading (owner/document scoping, pagination, literal search, and error states).
 - Production build and strict TypeScript checks pass.
 - All workspace pages redirect signed-out visitors to login; tested APIs return 401.
 - Invalid-login errors were checked in-browser; successful login was reported by the user.
@@ -279,6 +281,10 @@ ticked on the page or paper; page checkmarks are not persisted.
 
 - Text-based PDFs only; scanned PDFs need external OCR. Upload limit: 3 MB and
   200,000 extracted characters per document.
+- Click **View document** in Upload → Your library to read existing or sample
+  material. The viewer shows saved extracted text, not the original PDF layout.
+  Passage order is by section label, not original file position; overlapping
+  retrieval passages can repeat text. No migration or AI calls are needed.
 - Up to six main topics, twelve quiz questions, and forty extracted questions per
   past-paper document. Use Q1-style or numbered text questions; complex exam
   layouts can need cleanup.
