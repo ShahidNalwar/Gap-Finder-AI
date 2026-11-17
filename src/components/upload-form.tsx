@@ -84,6 +84,7 @@ export function UploadForm() {
             <input className="mt-4 !border-0 !bg-transparent !p-0 text-xs font-normal" type="file" name="file" accept=".pdf,.txt" required disabled={!!busy} />
           </label>
           <p className="text-xs leading-5 text-slate-500">Up to 3 MB. PDFs must contain selectable text. Documents stay private to your account.</p>
+          <p className="text-sm font-semibold text-teal-800">Please click the Upload material button to upload your resources.</p>
           <div className="flex flex-wrap items-center justify-between gap-3"><button className="button-primary" disabled={!!busy}><Icon name="upload" className="h-4 w-4" />{busy === "upload" ? "Extracting and saving…" : "Upload material"}</button><span className="inline-flex items-center gap-1.5 text-[11px] text-slate-400"><Icon name="shield" className="h-3.5 w-3.5" />Only visible to you</span></div>
         </form>
         <section className="relative flex flex-col overflow-hidden rounded-2xl border border-teal-100 bg-gradient-to-br from-teal-50 to-emerald-50/50 p-6 sm:p-7 lg:col-span-2">
